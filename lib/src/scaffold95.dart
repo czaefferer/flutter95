@@ -11,12 +11,14 @@ class Scaffold95 extends StatelessWidget {
     required this.title,
     required this.body,
     this.toolbar,
+    this.pop,
     Key? key,
   }) : super(key: key);
 
   final String title;
   final Widget body;
   final Toolbar95? toolbar;
+  final void Function()? pop;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class Scaffold95 extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          WindowHeader95(title: title),
+          WindowHeader95(title: title, pop: pop),
           const SizedBox(height: 4),
           if (toolbar != null) toolbar!,
           if (toolbar != null) const SizedBox(height: 4),
@@ -38,10 +40,12 @@ class Scaffold95 extends StatelessWidget {
 class WindowHeader95 extends StatefulWidget {
   const WindowHeader95({
     required this.title,
+    this.pop,
     Key? key,
   }) : super(key: key);
 
   final String? title;
+  final void Function()? pop;
 
   @override
   _WindowHeader95State createState() => _WindowHeader95State();
@@ -80,7 +84,7 @@ class _WindowHeader95State extends State<WindowHeader95> {
                 style: Flutter95.headerTextStyle,
               ),
               Spacer(),
-              if (_canPop) CloseButton95(),
+              if (_canPop) CloseButton95(pop: widget.pop),
               const SizedBox(width: 4),
             ],
           ),
@@ -91,12 +95,16 @@ class _WindowHeader95State extends State<WindowHeader95> {
 }
 
 class CloseButton95 extends StatelessWidget {
+  const CloseButton95({Key? key, this.pop}) : super(key: key);
+
+  final void Function()? pop;
+
   @override
   Widget build(BuildContext context) {
     return Button95(
       height: 24,
       padding: EdgeInsets.zero,
-      onTap: () {
+      onTap: pop ?? () {
         Navigator.of(context).pop();
       },
       child: Icon(
